@@ -1,14 +1,14 @@
 {
-  "prefix": "?",
+  "prefix": "+",
   "AdminBot": [
-    "your uid",
+    "100036956043695",
     "",
     ""
   ],
   "adminOnly": true,
-  "name": "your bot name",
+  "name": "Harold Hutchins 1.0v",
   "cooldowns": 20000,
-  "BotOwner": "your name to display the bi ",
+  "BotOwner": "Jonell Magallanes ",
   "ownerLink": "https://www.facebook.com/propertynilove.magallnes",
   "logs": true,
   "shotiCron": true,
