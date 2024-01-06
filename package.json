@@ -1,13 +1,4 @@
 {
-  "name": "nodejs",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "Jonell Magallanes",
-  "license": "ISC",
   "dependencies": {
     "@duyhau/fca-unofficial": "^1.0.9",
     "@huudann/fca-unofficial": "^1.2.1",
@@ -80,6 +71,4 @@
     "youtube-dl-wrap": "^2.1.1",
     "yt-search": "^2.10.4",
     "ytdl-core": "^4.11.5"
-  },
-  "description": "HUTCHINS BOT 1.0.0V"
-}
+  }
