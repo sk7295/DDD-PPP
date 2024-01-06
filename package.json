@@ -18,6 +18,7 @@
     "mime-types": "^2.1.35",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.44",
+    "node-cron": "^3.0.2",
     "node-ainzfb-new": "^1.6.32-stable",
     "pastebin-api": "^7.0.0",
     "path": "^0.12.7",
