@@ -1,4 +1,13 @@
 {
+  "name": "nodejs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jonell Magallanes",
+  "license": "ISC",
   "dependencies": {
     "@xaviabot/fb-downloader": "^1.0.14",
     "axios": "^1.6.5",
@@ -30,5 +39,6 @@
     "usetube": "^2.2.7",
     "yt-search": "^2.10.4",
     "ytdl-core": "^4.11.5"
-  }
+  },
+    "description": "HUTCHINS BOT 1.0.0V"
 }
