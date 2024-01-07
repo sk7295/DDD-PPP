@@ -12,7 +12,7 @@ module.exports = {
     const input = event.body;
     const text = input.substring(input.indexOf(' ') + 1);
 
-    if (!input.startsWith('sendnoti ') || text === "") {
+    if (!input.startsWith('sendnoti ') || text === " ") {
       return api.sendMessage("Please enter a notification message.", event.threadID);
     }
     
