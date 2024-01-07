@@ -1,4 +1,4 @@
-const login = require("node-ainzfb-new");
+const login = require("@trunqkj3n/kaguya");
 const cron = require('node-cron');
 const axios = require("axios");
 const fs = require("fs");
