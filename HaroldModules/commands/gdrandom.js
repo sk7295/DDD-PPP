@@ -12,7 +12,7 @@ module.exports = {
   letStart: async function({ api, event }) {
     api.sendMessage("⏱️ | Sending Random video Geometry Dash Just Please wait...", event.threadID, event.messageID);
     api.setMessageReaction("⏱️", event.messageID, () => {}, true);
-    const response = await axios.get('https://hpdj3c-5000.csb.app/gd', {
+    const response = await axios.get('https://geometry-dash-api-video.onrender.com/gd', {
       responseType: 'arraybuffer'
     }).catch(error => {
       api.sendMessage("Error fetching video.", event.threadID, event.messageID);
