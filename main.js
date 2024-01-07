@@ -1,4 +1,4 @@
-const login = require ("node-ainzfb-new");
+const login = require("node-ainzfb-new");
 const cron = require('node-cron');
 const axios = require("axios");
 const fs = require("fs");
@@ -164,22 +164,6 @@ if (existsSync(appStatePath)) {
 
       api.listenMqtt(async (err, event) => {
         if (err) return console.error(err);
-
-        const sqlite3 = require('sqlite3').verbose();
-        const db = new sqlite3.Database('main_bot_system.sqlite');
-
-        // Create the 'items' table if it doesn't exist
-        db.serialize(() => {
-          db.run(`
-    CREATE TABLE IF NOT EXISTS items (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      description TEXT
-    )
-  `);
-        });
-
-        module.exports = db;
 
         //*joinnoti here
         if (event.body !== null) {
