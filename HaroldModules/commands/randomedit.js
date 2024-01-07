@@ -12,7 +12,7 @@ module.exports = {
   letStart: async function({ api, event }) {
     api.sendMessage("⏱️ | Sending Random edit Just Please wait...", event.threadID, event.messageID);
     api.setMessageReaction("⏱️", event.messageID, () => {}, true);
-    const response = await axios.get('https://9wsf2x-3000.csb.app/randomedit', {
+    const response = await axios.get('https://random-edit-video.onrender.com/edit', {
       responseType: 'arraybuffer'
     }).catch(error => {
       api.sendMessage("Error fetching video.", event.threadID, event.messageID);
