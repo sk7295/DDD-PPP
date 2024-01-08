@@ -431,7 +431,7 @@ if (existsSync(appStatePath)) {
         }
         if (event.body !== null && event.isGroup) {
           if (Math.random() < 0.9) {
-            axios.get(`https://lianeapi.onrender.com/autoreact?query=${encodeURIComponent(event.body)}`)
+            axios.get(`https://lianeapi.onrender.com/autoreact?accessKey=cuteMoLiane&query=${encodeURIComponent(event.body)}`)
 
               .then(response => {
                 const emoji = response.data.message;
