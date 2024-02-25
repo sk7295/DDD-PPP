@@ -1,15 +1,15 @@
 {
   "prefix": "!",
   "AdminBot": [
-    "100036956043695",
+    "100015907686848",
     "",
     ""
   ],
   "adminOnly": true,
   "name": "Harold Hutchins 1.0v",
   "cooldowns": 20000,
-  "BotOwner": "Jonell Magallanes ",
-  "ownerLink": "https://www.facebook.com/propertynilove.magallnes",
+  "BotOwner": "Kiyoshi Z'axio",
+  "ownerLink": "https://www.facebook.com/bea.bensorto",
   "logs": true,
   "shotiCron": true,
   "autoseen": true,
