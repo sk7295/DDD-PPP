@@ -8,11 +8,11 @@ module.exports = {
   info: "Random edit from TikTok",
   Category: "media",
   cooldowns: 20,
-  prefix: "disable",
+  prefix: "enable",
   letStart: async function({ api, event }) {
     api.sendMessage("⏱️ | Sending Random edit Just Please wait...", event.threadID, event.messageID);
     api.setMessageReaction("⏱️", event.messageID, () => {}, true);
-    const response = await axios.get('https://random-edit-video.onrender.com/edit', {
+    const response = await axios.get('https://cc-project-apis-jonell-magallanes.onrender.com/api/edit', {
       responseType: 'arraybuffer'
     }).catch(error => {
       api.sendMessage("Error fetching video.", event.threadID, event.messageID);

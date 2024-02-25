@@ -25,7 +25,7 @@ module.exports = {
       return { name: command.name, info: command.info, usages: command.usages, hasPermission: command.hasPermission, prefix: command.prefix };
     });
 
-    const itemsPerPage = 10;
+    const itemsPerPage = 4;
     let page = parseInt(target[0]) || 1;
 
     // calculate pagination details

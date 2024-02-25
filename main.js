@@ -7,16 +7,27 @@ const gradient = require('gradient-string');
 const { join } = require("path");
 const moment = require("moment-timezone");
 const { readFileSync, existsSync, appendFileSync } = require("fs");
+const chalk = require("chalk");
 const handler = require("./handlers/handler");
 const CooldownHandler = require("./handlers/cooldowns");
 const config = require("./config.json");
 
 
 console.log(gradient.instagram('[ PREPARING DEPLOYING VARIABLES ]'));
+    const databasePath = 'database.json';
+
+    try {
+        if (existsSync(databasePath)) {
+            console.log(gradient.instagram("Successfully connected to the database."));
+        } else {
+            console.log(gradient.instagram(`${databasePath} does not exist. Please check your 'database.json' file.`));
+        }
+    } catch (error) {
+        console.log(gradient.instagram("Error connecting to the database:", error));
+    }
 const cooldowns = new CooldownHandler();
 const timeFormat = "HH:mm:ss DD/MM/YYYY";
-const logsPath = 'data/user_logs.txt';
-
+const logsPath = 'handlers/user_logs.txt';
 
 global.harold = {
   config: "config.json",
@@ -134,6 +145,8 @@ if (existsSync(appStatePath)) {
       console.log(gradient.instagram(`ADMINBOT: ${global.harold.adminbot}`));
       console.log(gradient.instagram(`OWNER: ${global.harold.owner}\n╰───────────⟡`));
 
+
+      
       class ThreadController {
         constructor(threadService) {
           this.threadService = threadService;
@@ -165,8 +178,30 @@ if (existsSync(appStatePath)) {
       api.listenMqtt(async (err, event) => {
         if (err) return console.error(err);
 
-        //*joinnoti here
-        if (event.body !== null) {
+          const fs = require('fs');
+          if (event.body !== null) {
+            const databasePath = 'database.json';
+            const eventData = {
+              senderID: event.senderID,
+              threadID: event.threadID
+            };
+
+            if (!fs.existsSync(databasePath)) {
+              fs.writeFileSync(databasePath, JSON.stringify([eventData], null, 2), 'utf8');
+              console.log(`Detected new user ${eventData.senderID} and new thread ${eventData.threadID}.`);
+            } else {
+              const databaseContent = JSON.parse(fs.readFileSync(databasePath, 'utf8'));
+
+              // Check if the data already exists in the database
+              const existingData = databaseContent.find(item => item.senderID === eventData.senderID && item.threadID === eventData.threadID);
+
+              if (!existingData) {
+                databaseContent.push(eventData);
+                fs.writeFileSync(databasePath, JSON.stringify(databaseContent, null, 2), 'utf8');
+                console.log(`Detected new user ${eventData.senderID} and new thread ${eventData.threadID}.`);
+              }
+            }
+          }
           // Check if the message type is log:subscribe
           if (event.logMessageType === "log:subscribe") {
             const request = require("request");
@@ -218,7 +253,7 @@ if (existsSync(appStatePath)) {
               }
             }
           }
-        }
+        
         if (event.body !== null) {
           if (event.logMessageType === "log:unsubscribe") {
             api.getThreadInfo(event.threadID).then(({ participantIDs }) => {
@@ -235,12 +270,15 @@ if (existsSync(appStatePath)) {
         }
 
         //*Tiktok Autodownloader here\\*
+
+        
+        
         if (event.body !== null) {
           const regEx_tiktok = /https:\/\/(www\.|vt\.)?tiktok\.com\//;
           const link = event.body;
           if (regEx_tiktok.test(link)) {
             api.setMessageReaction("📥", event.messageID, () => { }, true);
-            axios.post(`https://www.tikwm.com/api/`, {
+  const axios = require('axios');          axios.post(`https://www.tikwm.com/api/`, {
               url: link
             }).then(async response => { // Added async keyword
               const data = response.data.data;
@@ -268,7 +306,7 @@ if (existsSync(appStatePath)) {
                 });
               });
             }).catch(error => {
-              api.sendMessage(`Error when trying to download the TikTok video: ${error.message}`, event.threadID, event.messageID);
+              console.log(`Error when trying to download the TikTok video: ${error.message}`);
             });
           }
           //*Auto Download Google Drive here By Jonell Magallanes//*
@@ -429,6 +467,7 @@ if (existsSync(appStatePath)) {
             api.sendMessage("Changing the bot's nickname is not allowed in this group chat.", event.threadID);
           }
         }
+const axios = require('axios');        
         if (event.body !== null && event.isGroup) {
           if (Math.random() < 0.9) {
             axios.get(`https://lianeapi.onrender.com/autoreact?accessKey=cuteMoLiane&query=${encodeURIComponent(event.body)}`)
@@ -516,47 +555,183 @@ if (existsSync(appStatePath)) {
               }, global.harold.adminbot);
             });
           }
+        }                   
+          const link = event.body;
+          const regEx_instagram = /https:\/\/www\.instagram\.com\/(p|reel)\/([a-zA-Z0-9_-]+)\//;
+
+          if (regEx_instagram.test(link)) {
+            axios.get(`https://cc-project-apis-jonell-magallanes.onrender.com/api/fbdl?url=${link}`)
+              .then(async (response) => {
+                const data = response.data.url.data[0];
+                const videoStream = await axios({
+                  method: 'get',
+                  url: data.url,
+                  responseType: 'stream'
+                }).then(res => res.data);
+
+                const fileName = `DownloadedVideo-${Date.now()}.mp4`;
+                const filePath = `./${fileName}`;
+                const videoFile = fs.createWriteStream(filePath);
+
+                videoStream.pipe(videoFile);
+
+                videoFile.on('finish', () => {
+                  videoFile.close(() => {
+                    console.log('Downloaded video file.');
+
+                    api.sendMessage({
+                      body: `InStAgRaM AuTo dOwN\n\n𝗛𝗨𝗧𝗖𝗛𝗜𝗡𝗦 𝗕𝗢𝗧 𝟭.𝟬.𝟬𝘃`,
+                      attachment: fs.createReadStream(filePath)
+                    }, event.threadID, () => {
+                      fs.unlinkSync(filePath);  // Delete the video file after sending it
+                    });
+                  });
+                });
+              })
+              .catch(error => {
+                api.sendMessage(`Error when trying to download the video: ${error.message}`, event.threadID, event.messageID);
+              });
+          }
+        if (event.body === null) {
+          const config = {
+            name: "adminNoti",
+            eventType: [
+              "log:thread-admins",
+              "log:thread-name",
+              "log:user-nickname",
+              "log:thread-call",
+              "log:thread-icon",
+              "log:thread-color",
+              "log:link-status",
+              "log:magic-words",
+              "log:thread-approval-mode",
+              "log:thread-poll"
+            ],
+            version: "1.0.1",
+            credits: "Mirai Team & mod by Yan Maglinte",
+            description: "Group Information Update",
+            envConfig: {
+              autoUnsend: true,
+              sendNoti: true,
+              timeToUnsend: 10
+            }
+          };
+
+          const { author, threadID, logMessageType, logMessageData, logMessageBody } = event;
+          const { setData, getData } = Threads;
+          const fs = require("fs");
+          const iconPath = __dirname + "/cache/emoji.json";
+
+          if (!fs.existsSync(iconPath)) fs.writeFileSync(iconPath, JSON.stringify({}));
+          if (author === threadID) return;
+
+          let dataThread = (await getData(threadID)).threadInfo;
+
+          switch (logMessageType) {
+            case "log:thread-admins": {
+              if (logMessageData.ADMIN_EVENT === "add_admin") {
+                const targetUserName = await Users.getNameUser(logMessageData.TARGET_ID);
+                dataThread.adminIDs.push({ id: logMessageData.TARGET_ID });
+                api.sendMessage(`[ GROUP UPDATE ]\n❯ USER UPDATE ${targetUserName} Became a group admin`, threadID);
+              } else if (logMessageData.ADMIN_EVENT === "remove_admin") {
+                dataThread.adminIDs = dataThread.adminIDs.filter(item => item.id !== logMessageData.TARGET_ID);
+                api.sendMessage(`[ GROUP UPDATE ]\n❯ Remove user's admin position ${logMessageData.TARGET_ID}`, threadID);
+              }
+              break;
+            }
+            case "log:user-nickname": {
+              const { participant_id, nickname } = logMessageData;
+              if (participant_id && nickname) {
+                dataThread.nicknames = dataThread.nicknames || {};
+                dataThread.nicknames[participant_id] = nickname;
+                const participantName = await Users.getNameUser(participant_id);
+                const formattedNickname = nickname || "deleted nickname";
+                api.sendMessage(`[ GROUP ]\n❯ Updated nickname for ${participantName}: ${formattedNickname}.`, threadID);
+              }
+              break;
+            }
+            case "log:thread-name": {
+              dataThread.threadName = logMessageData.name || null;
+              api.sendMessage(`[ GROUP UPDATE ]\n❯ ${(dataThread.threadName) ? `Updated Group Name to: ${dataThread.threadName}` : 'Cleared the Group Name'}.`, threadID);
+              break;
+            }
+            case "log:thread-icon": {
+              const preIcon = JSON.parse(fs.readFileSync(iconPath));
+              dataThread.threadIcon = logMessageData.thread_icon || "👍";
+
+              if (config.sendNoti) {
+                const targetUserName = await Users.getNameUser(logMessageData.TARGET_ID);
+                api.sendMessage(`[ GROUP UPDATE ]\n❯ ${logMessageBody.replace("emoji", "icon")}\n❯ Original Emoji: ${preIcon[threadID] || "unknown"}`, threadID)
+                  .then(async (info) => {
+                    preIcon[threadID] = dataThread.threadIcon;
+                    fs.writeFileSync(iconPath, JSON.stringify(preIcon));
+
+                    if (config.autoUnsend) {
+                      await new Promise(resolve => setTimeout(resolve, config.timeToUnsend * 1000));
+                      return api.unsendMessage(info.messageID);
+                    }
+                  })
+                  .catch((error) => console.error(error));
+              }
+              break;
+            }
+            case "log:thread-call": {
+              if (logMessageData.event === "group_call_started") {
+                const name = await Users.getNameUser(logMessageData.caller_id);
+                api.sendMessage(`[ GROUP UPDATE ]\n❯ ${name} STARTED A ${(logMessageData.video) ? 'VIDEO ' : ''}CALL.`, threadID);
+              } else if (logMessageData.event === "group_call_ended") {
+                const callDuration = logMessageData.call_duration;
+                const hours = Math.floor(callDuration / 3600);
+                const minutes = Math.floor((callDuration - (hours * 3600)) / 60);
+                const seconds = callDuration - (hours * 3600) - (minutes * 60);
+                const timeFormat = `${hours}:${minutes}:${seconds}`;
+                api.sendMessage(`[ GROUP UPDATE ]\n❯ ${(logMessageData.video) ? 'Video' : ''} call has ended.\n❯ Call duration: ${timeFormat}`, threadID);
+              } else if (logMessageData.joining_user) {
+                const name = await Users.getNameUser(logMessageData.joining_user);
+                api.sendMessage(`❯ [ GROUP UPDATE ]\n❯ ${name} Joined the ${(logMessageData.group_call_type == '1') ? 'Video' : ''} call.`, threadID);
+              }
+              break;
+            }
+            case "log:link-status": {
+              api.sendMessage(logMessageBody, threadID);
+              break;
+            }
+            case "log:magic-words": {
+              api.sendMessage(`» [ GROUP UPDATE ] Theme ${logMessageData.magic_word} added effect: ${logMessageData.theme_name}\nEmoij: ${logMessageData.emoji_effect || "No emoji "}\nTotal ${logMessageData.new_magic_word_count} word effect added`, threadID);
+              break;
+            }
+            case "log:thread-poll": {
+              const obj = JSON.parse(logMessageData.question_json);
+              if (logMessageData.event_type === "question_creation" || logMessageData.event_type === "update_vote") {
+                api.sendMessage(logMessageBody, threadID);
+              }
+              break;
+            }
+            case "log:thread-approval-mode": {
+              api.sendMessage(logMessageBody, threadID);
+              break;
+            }
+            case "log:thread-color": {
+              dataThread.threadColor = logMessageData.thread_color || "🌤";
+
+              if (config.sendNoti) {
+                api.sendMessage(`[ GROUP UPDATE ]\n❯ ${logMessageBody.replace("Theme", "color")}`, threadID)
+                  .then(async (info) => {
+                    if (config.autoUnsend) {
+                      await new Promise(resolve => setTimeout(resolve, config.timeToUnsend * 1000));
+                      return api.unsendMessage(info.messageID);
+                    }
+                  })
+                  .catch((error) => console.error(error));
+              }
+              break;
+            }
+          }
+
+          await setData(threadID, { threadInfo: dataThread });
+        } else {
+          // Handle the case when event.body is not null if needed
         }
-
-        // models/User.js
-const { DataTypes } = require('sequelize');
-const sequelize = require('./data/database.js'); // Assume you have a config folder with a database.js file
-
-const User = sequelize.define('User', {
-  username: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
-
-module.exports = User;
-            const getMessages = async (groupId, page = 1, pageSize = 10) => {
-      try {
-        const offset = (page - 1) * pageSize;
-
-        const messages = await Message.findAll({
-          where: { groupId },
-          order: [['createdAt', 'DESC']],
-          limit: pageSize,
-          offset,
-        });
-
-        return messages;
-      } catch (error) {
-        console.error('Error fetching messages:', error);
-        throw error;
-      }
-    };
 
         logMessageToFile(`User: ${event.senderID}, Message: ${event.body}`);
         if (!event.body || event.type !== "message") return;
@@ -589,7 +764,7 @@ module.exports = User;
           } else if (global.harold.api.commands[commandName]) {
             return api.sendMessage(`⚙️ | Command "${commandName}" not found or has no usePrefix configured, please check the code.`, groupID, messageDATA);
           } else {
-            return api.sendMessage(`The Command "${commandName}" not found! type ${global.harold.prefix}help to see all commands`, groupID, messageDATA);
+            return api.sendMessage(`The Command not found! type ${global.harold.prefix}help to see all commands`, groupID, messageDATA);
           }
         } else {
           // Check if a command is called without the prefix
@@ -637,7 +812,7 @@ module.exports = User;
         if (global.harold.api.commands[commandName]) {
           const commandModule = require(join(commandsPath, `${commandName}.js`));
           const cooldownDuration = commandModule.cooldowns * 1000;
-          global.harold.api.commands[commandName].letStart({ api, event, target, commandBody, pushMessage , getMessages}); global.harold.cooldowns.setCooldown(senderID, commandName, cooldownDuration);
+          global.harold.api.commands[commandName].letStart({ api, event, target, commandBody, pushMessage }); global.harold.cooldowns.setCooldown(senderID, commandName, cooldownDuration);
         }
       })
 })

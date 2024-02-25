@@ -24,11 +24,6 @@ module.exports = {
     userData[userId].balance -= 5;
     fs.writeFileSync(userDataFile, JSON.stringify(userData, null, 2));
 
-    api.sendMessage(
-      `\uD83D\uDCB0 | $5 has been deducted from your account. Your new balance is $${userData[userId].balance}.`,
-      event.threadID
-    );
-
   api.sendMessage(`⏱️ | Sending Shoti Please Wait....`, event.threadID);
   api.setMessageReaction("⏱️", event.messageID, (err) => {}, true);
   api.sendTypingIndicator(event.threadID, true);
@@ -40,7 +35,7 @@ module.exports = {
     let response = await axios.post(
       "https://api--v1-shoti.vercel.app/api/v1/get",
       {
-        apikey: "$shoti-1hhjqrnj0arckumslo8",
+        apikey: "apikey",
       },
     );
 
