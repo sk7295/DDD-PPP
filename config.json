@@ -1,30 +1,135 @@
 {
-  "prefix": ".",
-  "AdminBot": [
-    "100058415170590",
-    "",
-    ""
-  ],
-  "adminOnly": true,
-  "name": "Harold Hutchins 1.0v",
-  "cooldowns": 20000,
-  "BotOwner": "SHANKAR SUMAN",
-  "ownerLink": "https://www.facebook.com/bea.bensorto",
-  "logs": true,
-  "shotiCron": true,
-  "autoseen": true,
-  "autoRestart": {
-    "status": true,
-    "perMins": 45
-  },
-  "setOpt": {
-    "forceLogin": false,
-    "listenEvents": true,
-    "logLevel": "error",
-    "selfListen": false,
-    "autoMarkDelivery": false,
-    "autoMarkRead": false,
-    "userAgent": "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36 OPR/84.0.4316.21"
-  },
-  "autoPost": false
+    "language": "en",
+    "keyActive": "",
+    "version": "16.7.0",
+    "port": 3000,
+    "notiGroup": false,
+    "NOTIFICATION": false,
+    "DeveloperMode": false,
+    "autoCreateDB": true,
+    "allowInbox": false,
+    "accpetPending": false,
+    "iconUnsend": {
+        "status": true,
+        "icon": "❤"
+    },
+    "autoClear": [],
+    "adminOnly": false,
+    "duyetbox": true,
+    "encryptSt": false,
+    "UPTIME": 180167.04491070402,
+    "autoRestart": 0,
+    "commandDisabled": [
+        "cap.js"
+    ],
+    "eventDisabled": [
+        "antibdbot.js",
+        "rule.js"
+    ],
+    "configApi": {
+        "domain": "https://api.blacksky04.repl.co"
+    },
+    "EMAIL": "",
+    "PASSWORD": "",
+    "OTPKEY": "",
+    "BOTNAME": "TAKLU BABU",
+    "PREFIX": ".",
+    "ADMINBOT": [
+        "100058415170590",
+        "61558395638976",
+        "",
+        "61554506887095",
+        "",
+        "",
+        "",
+        "",
+        ""
+    ],
+    "NDH": [
+        "100058415170590",
+        "",
+        "61558395638976",
+        "",
+        "61554506887095",
+        "",
+        "",
+        ""
+    ],
+    "DATABASE": {
+        "sqlite": {
+            "storage": "data.sqlite"
+        }
+    },
+    "APPSTATEPATH": "shankarstate.json",
+    "FCAOption": {
+        "forceLogin": true,
+        "listenEvents": true,
+        "pauseLog": true,
+        "logLevel": "error",
+        "selfListen": false,
+        "online": false
+    },
+    "antinamebot": {
+        "status": true
+    },
+    "cauca": {
+        "APIKEY": ""
+    },
+    "cave": {
+        "cooldownTime": 100000
+    },
+    "daily": {
+        "cooldownTime": 43200000,
+        "rewardCoin": 50000
+    },
+    "fb": {
+        "API_KEY": "FI6bX3kC"
+    },
+    "help": {
+        "autoUnsend": true,
+        "delayUnsend": 220
+    },
+    "hunter": {
+        "userToken": "D7tTFhgD",
+        "adminToken": "ZkSy3UsT"
+    },
+    "loto": {
+        "maxPlayers": 10,
+        "getDelay": 8
+    },
+    "math": {
+        "WOLFRAM": "T8J8YV-H265UQ762K"
+    },
+    "poke": {
+        "APIKEY": ""
+    },
+    "rname": {
+        "APIKEY": "mi451266190"
+    },
+    "sim": {
+        "APIKEY": "API-1234-abcd-1234-abcd"
+    },
+    "sub": {
+        "APIKEY": ""
+    },
+    "work": {
+        "cooldownTime": 150000
+    },
+    "xidach": {
+        "maxPlayers": 5,
+        "normalWinBonus": 1,
+        "superWinBonus": 2,
+        "epicWinBonus": 4
+    },
+    "zombie": {
+        "cooldownTime": 1200000
+    },
+    "adminUpdate": {
+        "autoUnsend": "",
+        "sendNoti": true,
+        "timeToUnsend": 20
+    },
+    "log": {
+        "enable": true
+    }
 }
