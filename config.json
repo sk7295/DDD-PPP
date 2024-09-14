@@ -60,7 +60,7 @@
             "storage": "data.sqlite"
         }
     },
-    "APPSTATEPATH": "shankarstate.json",
+    "APPSTATEPATH": "Haroldstate.json",
     "FCAOption": {
         "forceLogin": true,
         "listenEvents": true,
